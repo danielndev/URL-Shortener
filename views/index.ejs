@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href='../public/index.css'>
+    <title>URL Shortener</title>
+  </head>
+  <body style="font-family: 'Montserrat', sans-serif;">
+    <% const url = "url.io/"; %>
+    <div class="jumbotron jumbotron-fluid mb-0 pl-0" style="background-color: #3AAFA9; color: #FEFFFF">
+      <div class="container-fluid pl-5">
+        <div class="row">
+          <div class="col-sm-7">
+            <h1 class="display-4 ">URL Shortener</h1>
+            <p class="lead">Create a short url for any social medial link and web page</p>
+          </div>
+          <div class="col-sm-4" style="overflow-x: hidden;">
+            <p class="my-4" id="type_writer_animation"></p>
+          </div>
+        </div>
+
+        
+      </div>
+    </div>
+    <div class="container-fluid pl-5 pr-5  pb-3 m-0" style="background-color: #3AAFA9; color: #17252A">
+      <form action="/shorten" method="post">
+        <div class="row justify-content-center">
+            <div class="form-group col-sm-5">
+              <input required type="url" class="form-control" id="link" name="link" placeholder="Enter link here">
+              <small id="urlHelp" class="form-text">The original URL goes here</small>
+            </div>
+            <div class="form-group col-sm-5">
+              <input type="text" class="form-control" id="prefix" name="prefix" placeholder="Enter custom anchor">
+              <small id="prefixHelp" class="form-text">Example: <%=url%>[anchor]. If empty a random one will be generated</small>
+            </div>
+            <div class="form-group col-sm-2">
+              <button type="submit" class="btn btn-dark" style="">Shorten URL</button>
+            </div>   
+          </div>
+
+          <% if(linkExists != '') { %>
+            <small style="color: red">This shortened link is already in use</small>
+          <% } %>
+
+          <% if(newLink != '') { %>
+            <div class="row justify-content-center">
+              <div class="col-sm-8 alert alert-info  mt-2 text-center" role="alert">
+                <p class="mb-2">Your new link <a href="/<%=newLink%>" class="alert-link"><%= newLink%></a> has been created</p>
+                <p class="m-0"><small>If this short URL is not connected to an account it will stop working in two weeks</small>  </p>       
+                <p class="m-0"><small>Create an account to keep it permanently</small></p>
+                <button type="submit" class="btn btn-dark mt-3" style="">Create Account</button> 
+
+              </div>
+            </div>
+            
+            <% } %>
+      </form>
+    </div>
+    <div class="container-fluid pt-5">
+        <div class="row justify-content-center">
+          <div class="col-sm-4 text-center mb-5 ">
+            <h4>How it works</h4>
+            <p><small>You enter the link you want your short url to redirect to and the anchor you want your short url to use. 
+              Your short url will look like this <%=url%>[anchor] and will send anyone who clicks on it to the original link</small>
+          </div>
+          
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-sm-4 text-center">
+            <h4>Keep track of clicks!</h4>
+              <p><small>The link will keep track of clicks. You can keep track all your urls by creating an account.
+              alternitively you can go to <%=url%>clicks/[your anchor] or type your anchor in <a href="#">here</a></small></p>
+              
+          </div>
+        </div>
+    </div>
+    <script>
+      ///Handles text animation
+      const url = "url.io/";
+      let textList = [
+          `'https://www.google.com/' + 'ggl' = ${url}/ggl`,
+          `'https://www.facebook.com/' + 'fb' = ${url}/fb`,
+          `'https://www.youtube.com/' + 'yt' = ${url}/y`
+      ];
+      let currentIndex = 0;
+      let speed = "100";
+      let typeWriterAnimation = document.getElementById("type_writer_animation");
+
+      let i = 0;
+      let currentText = textList[currentIndex];
+      function typeWriter() {   
+        if (i < currentText.length) {
+            typeWriterAnimation.innerHTML += currentText.charAt(i);
+            i++;
+            setTimeout(typeWriter, speed);
+        }else{
+          i = 0;
+          currentIndex ++;
+          if(currentIndex >= textList.length){
+            currentIndex = 0;
+          }
+          currentText = textList[currentIndex];
+          setTimeout(clear, 1000);  
+        }
+      }
+      function clear(){
+        typeWriterAnimation.classList.add('type_writer');
+        setTimeout(() => {
+          typeWriterAnimation.innerHTML = "";
+          typeWriterAnimation.classList.remove('type_writer');
+          setTimeout(typeWriter, 500)
+          
+        }, 500)  
+      }
+      typeWriter();
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  </body>
+</html>
