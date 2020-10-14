@@ -6,7 +6,7 @@ const flash = require('connect-flash');
 
 const ShortURL = require('./model/ShortURL');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.argv[2] || 3000;
 
 const URL = "url.io/";
 
@@ -24,7 +24,7 @@ app.use(flash());
 
 
 app.listen(PORT, () =>{
-    console.log('Server is listening');
+    console.log('Server is listening on port ' + PORT);
 })
 
 mongoose.connect('mongodb+srv://test_user:test1@cluster0-k7vde.mongodb.net/url-shortener',
